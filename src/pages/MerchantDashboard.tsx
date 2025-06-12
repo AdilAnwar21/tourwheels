@@ -1,27 +1,52 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import 
+// React,
+ { useState, useEffect } 
+ from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bus, 
   DollarSign, 
-  Users, 
+  // Users, 
   Star, 
   TrendingUp, 
   Calendar,
   Plus,
   Eye,
   Edit,
-  Trash2,
-  MapPin,
-  Clock,
+  // Trash2,
+  // MapPin,
+  // Clock,
   User,
-  Phone,
-  Mail
+  // Phone,
+  // Mail
 } from 'lucide-react';
 import MerchantSidebar from '../components/MerchantSidebar';
+import Loader from '../components/Loader';
 
 const MerchantDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showAddBusModal, setShowAddBusModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [tabLoading, setTabLoading] = useState(false);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Simulate tab loading
+  const handleTabChange = (tab: string) => {
+    if (tab !== activeTab) {
+      setTabLoading(true);
+      setTimeout(() => {
+        setActiveTab(tab);
+        setTabLoading(false);
+      }, 800);
+    }
+  };
 
   // Mock data - replace with API calls later
   const dashboardStats = {
@@ -147,14 +172,15 @@ const MerchantDashboard = () => {
     const categories = ['Bus', 'Mini Bus', 'Traveller', 'Luxury Coach', 'SUV', 'Sedan'];
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto mx-4"
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         >
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold">Add New Vehicle</h3>
+            <h3 className="text-xl sm:text-2xl font-bold">Add New Vehicle</h3>
             <button
               onClick={() => setShowAddBusModal(false)}
               className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -225,7 +251,7 @@ const MerchantDashboard = () => {
                 onChange={(e) => setBusData({...busData, description: e.target.value})}
               />
             </div>
-            <div className="flex justify-end space-x-3 pt-4">
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4">
               <button
                 type="button"
                 onClick={() => setShowAddBusModal(false)}
@@ -246,17 +272,21 @@ const MerchantDashboard = () => {
     );
   };
 
+  if (isLoading) {
+    return <Loader fullScreen text="Loading merchant dashboard..." size="lg" />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <MerchantSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <MerchantSidebar activeTab={activeTab} setActiveTab={handleTabChange} />
 
       {/* Main Content */}
       <div className="flex-1 lg:ml-64">
         <div className="p-4 lg:p-8">
           {/* Header */}
           <div className="mb-8 mt-16 lg:mt-0">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {activeTab === 'overview' && 'Dashboard Overview'}
               {activeTab === 'vehicles' && 'My Vehicles'}
               {activeTab === 'bookings' && 'Bookings Management'}
@@ -266,7 +296,7 @@ const MerchantDashboard = () => {
               {activeTab === 'messages' && 'Messages'}
               {activeTab === 'earnings' && 'Earnings & Payouts'}
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 text-sm sm:text-base">
               {activeTab === 'overview' && 'Welcome back! Here\'s what\'s happening with your business.'}
               {activeTab === 'vehicles' && 'Manage your fleet and add new vehicles'}
               {activeTab === 'bookings' && 'Track and manage all your bookings'}
@@ -278,309 +308,312 @@ const MerchantDashboard = () => {
             </p>
           </div>
 
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-8"
-            >
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <DollarSign className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Total Sales</p>
-                      <p className="text-2xl font-bold text-gray-900">${dashboardStats.totalSales.toLocaleString()}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Calendar className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Total Bookings</p>
-                      <p className="text-2xl font-bold text-gray-900">{dashboardStats.totalBookings}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Bus className="h-6 w-6 text-purple-600" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Active Vehicles</p>
-                      <p className="text-2xl font-bold text-gray-900">{dashboardStats.activeVehicles}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-yellow-100 rounded-lg">
-                      <Star className="h-6 w-6 text-yellow-600" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Avg Rating</p>
-                      <p className="text-2xl font-bold text-gray-900">{dashboardStats.averageRating}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-red-100 rounded-lg">
-                      <TrendingUp className="h-6 w-6 text-red-600" />
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Growth</p>
-                      <p className="text-2xl font-bold text-gray-900">+{dashboardStats.monthlyGrowth}%</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recent Bookings */}
-              <div className="bg-white rounded-xl shadow-sm border">
-                <div className="p-6 border-b">
-                  <h3 className="text-lg font-semibold">Recent Bookings</h3>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vehicle</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {recentBookings.map((booking) => (
-                        <tr key={booking.id}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{booking.customer}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{booking.vehicle}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{booking.date}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${booking.amount}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              booking.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                            }`}>
-                              {booking.status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Vehicles Tab */}
-          {activeTab === 'vehicles' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-2xl font-bold">My Vehicles</h2>
-                  <p className="text-gray-600">Manage your fleet and track performance</p>
-                </div>
-                <button
-                  onClick={() => setShowAddBusModal(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                >
-                  <Plus className="h-5 w-5" />
-                  <span>Add Vehicle</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {vehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                    <img
-                      src={vehicle.image}
-                      alt={vehicle.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          vehicle.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {vehicle.status}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 text-sm mb-4">{vehicle.category} • {vehicle.capacity} seats</p>
-                      
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">Rating</span>
-                          <div className="flex items-center">
-                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                            <span className="text-sm font-medium ml-1">{vehicle.rating}</span>
+          <AnimatePresence mode="wait">
+            {tabLoading ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Loader text="Loading content..." size="md" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Overview Tab */}
+                {activeTab === 'overview' && (
+                  <div className="space-y-6 sm:space-y-8">
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+                      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border">
+                        <div className="flex flex-col sm:flex-row sm:items-center">
+                          <div className="p-2 bg-green-100 rounded-lg mb-2 sm:mb-0 self-start">
+                            <DollarSign className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
+                          </div>
+                          <div className="sm:ml-4">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600">Total Sales</p>
+                            <p className="text-lg sm:text-2xl font-bold text-gray-900">${dashboardStats.totalSales.toLocaleString()}</p>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">Bookings</span>
-                          <span className="text-sm font-medium">{vehicle.totalBookings}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">Revenue</span>
-                          <span className="text-sm font-medium">${vehicle.revenue.toLocaleString()}</span>
+                      </div>
+                      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border">
+                        <div className="flex flex-col sm:flex-row sm:items-center">
+                          <div className="p-2 bg-blue-100 rounded-lg mb-2 sm:mb-0 self-start">
+                            <Calendar className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
+                          </div>
+                          <div className="sm:ml-4">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600">Total Bookings</p>
+                            <p className="text-lg sm:text-2xl font-bold text-gray-900">{dashboardStats.totalBookings}</p>
+                          </div>
                         </div>
                       </div>
+                      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border">
+                        <div className="flex flex-col sm:flex-row sm:items-center">
+                          <div className="p-2 bg-purple-100 rounded-lg mb-2 sm:mb-0 self-start">
+                            <Bus className="h-4 w-4 sm:h-6 sm:w-6 text-purple-600" />
+                          </div>
+                          <div className="sm:ml-4">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600">Active Vehicles</p>
+                            <p className="text-lg sm:text-2xl font-bold text-gray-900">{dashboardStats.activeVehicles}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border">
+                        <div className="flex flex-col sm:flex-row sm:items-center">
+                          <div className="p-2 bg-yellow-100 rounded-lg mb-2 sm:mb-0 self-start">
+                            <Star className="h-4 w-4 sm:h-6 sm:w-6 text-yellow-600" />
+                          </div>
+                          <div className="sm:ml-4">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600">Avg Rating</p>
+                            <p className="text-lg sm:text-2xl font-bold text-gray-900">{dashboardStats.averageRating}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border">
+                        <div className="flex flex-col sm:flex-row sm:items-center">
+                          <div className="p-2 bg-red-100 rounded-lg mb-2 sm:mb-0 self-start">
+                            <TrendingUp className="h-4 w-4 sm:h-6 sm:w-6 text-red-600" />
+                          </div>
+                          <div className="sm:ml-4">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600">Growth</p>
+                            <p className="text-lg sm:text-2xl font-bold text-gray-900">+{dashboardStats.monthlyGrowth}%</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-                      <div className="flex space-x-2">
-                        <button className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-1">
-                          <Eye className="h-4 w-4" />
-                          <span>View</span>
-                        </button>
-                        <button className="flex-1 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center justify-center space-x-1">
-                          <Edit className="h-4 w-4" />
-                          <span>Edit</span>
-                        </button>
+                    {/* Recent Bookings */}
+                    <div className="bg-white rounded-xl shadow-sm border">
+                      <div className="p-4 sm:p-6 border-b">
+                        <h3 className="text-lg font-semibold">Recent Bookings</h3>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vehicle</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-200">
+                            {recentBookings.map((booking) => (
+                              <tr key={booking.id}>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{booking.customer}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{booking.vehicle}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{booking.date}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${booking.amount}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                  <span className={`px-2 py-1 text-xs rounded-full ${
+                                    booking.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                                  }`}>
+                                    {booking.status}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
+                )}
 
-          {/* Customers Tab */}
-          {activeTab === 'customers' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
-              <div className="bg-white rounded-xl shadow-sm border">
-                <div className="p-6 border-b">
-                  <h3 className="text-lg font-semibold">Customer Database</h3>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bookings</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Spent</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Booking</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {customers.map((customer) => (
-                        <tr key={customer.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                <User className="h-5 w-5 text-blue-600" />
+                {/* Vehicles Tab */}
+                {activeTab === 'vehicles' && (
+                  <div className="space-y-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      <div>
+                        <h2 className="text-xl sm:text-2xl font-bold">My Vehicles</h2>
+                        <p className="text-gray-600 text-sm sm:text-base">Manage your fleet and track performance</p>
+                      </div>
+                      <button
+                        onClick={() => setShowAddBusModal(true)}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2 text-sm sm:text-base"
+                      >
+                        <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <span>Add Vehicle</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                      {vehicles.map((vehicle) => (
+                        <div key={vehicle.id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                          <img
+                            src={vehicle.image}
+                            alt={vehicle.name}
+                            className="w-full h-40 sm:h-48 object-cover"
+                          />
+                          <div className="p-4 sm:p-6">
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="text-sm sm:text-lg font-semibold">{vehicle.name}</h3>
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                vehicle.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {vehicle.status}
+                              </span>
+                            </div>
+                            <p className="text-gray-600 text-xs sm:text-sm mb-4">{vehicle.category} • {vehicle.capacity} seats</p>
+                            
+                            <div className="space-y-2 mb-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs sm:text-sm text-gray-600">Rating</span>
+                                <div className="flex items-center">
+                                  <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 fill-current" />
+                                  <span className="text-xs sm:text-sm font-medium ml-1">{vehicle.rating}</span>
+                                </div>
                               </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{customer.name}</div>
-                                <div className="text-sm text-gray-500">{customer.email}</div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs sm:text-sm text-gray-600">Bookings</span>
+                                <span className="text-xs sm:text-sm font-medium">{vehicle.totalBookings}</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs sm:text-sm text-gray-600">Revenue</span>
+                                <span className="text-xs sm:text-sm font-medium">${vehicle.revenue.toLocaleString()}</span>
                               </div>
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.phone}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.totalBookings}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${customer.totalSpent.toLocaleString()}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{customer.lastBooking}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              customer.status === 'VIP' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'
-                            }`}>
-                              {customer.status}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            <button className="text-blue-600 hover:text-blue-900">View Details</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </motion.div>
-          )}
 
-          {/* Reviews Tab */}
-          {activeTab === 'reviews' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {reviews.map((review) => (
-                  <div key={review.id} className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <User className="h-5 w-5 text-blue-600" />
+                            <div className="flex space-x-2">
+                              <button className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-1 text-xs sm:text-sm">
+                                <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <span>View</span>
+                              </button>
+                              <button className="flex-1 bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 flex items-center justify-center space-x-1 text-xs sm:text-sm">
+                                <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <span>Edit</span>
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-semibold">{review.customer}</h4>
-                          <p className="text-sm text-gray-600">{review.vehicle}</p>
-                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Customers Tab */}
+                {activeTab === 'customers' && (
+                  <div className="space-y-6">
+                    <div className="bg-white rounded-xl shadow-sm border">
+                      <div className="p-4 sm:p-6 border-b">
+                        <h3 className="text-lg font-semibold">Customer Database</h3>
                       </div>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bookings</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Spent</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Booking</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-200">
+                            {customers.map((customer) => (
+                              <tr key={customer.id}>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                      <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                                    </div>
+                                    <div className="ml-4">
+                                      <div className="text-xs sm:text-sm font-medium text-gray-900">{customer.name}</div>
+                                      <div className="text-xs text-gray-500">{customer.email}</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">{customer.phone}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">{customer.totalBookings}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">${customer.totalSpent.toLocaleString()}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">{customer.lastBooking}</td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                  <span className={`px-2 py-1 text-xs rounded-full ${
+                                    customer.status === 'VIP' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'
+                                  }`}>
+                                    {customer.status}
+                                  </span>
+                                </td>
+                                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm">
+                                  <button className="text-blue-600 hover:text-blue-900">View Details</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
-                    <p className="text-gray-700 mb-3">"{review.comment}"</p>
-                    <p className="text-sm text-gray-500">{review.date}</p>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
+                )}
 
-          {/* Other tabs content */}
-          {(activeTab === 'bookings' || activeTab === 'analytics' || activeTab === 'messages' || activeTab === 'earnings') && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl shadow-sm border p-8 text-center"
-            >
-              <div className="text-gray-400 mb-4">
-                <Bus className="h-16 w-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Section
-              </h3>
-              <p className="text-gray-600">
-                This section is under development. Content will be added soon.
-              </p>
-            </motion.div>
-          )}
+                {/* Reviews Tab */}
+                {activeTab === 'reviews' && (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                      {reviews.map((review) => (
+                        <div key={review.id} className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-sm sm:text-base">{review.customer}</h4>
+                                <p className="text-xs sm:text-sm text-gray-600">{review.vehicle}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                    i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-gray-700 mb-3 text-sm sm:text-base">"{review.comment}"</p>
+                          <p className="text-xs sm:text-sm text-gray-500">{review.date}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Other tabs content */}
+                {(activeTab === 'bookings' || activeTab === 'analytics' || activeTab === 'messages' || activeTab === 'earnings') && (
+                  <div className="bg-white rounded-xl shadow-sm border p-8 text-center">
+                    <div className="text-gray-400 mb-4">
+                      <Bus className="h-12 w-12 sm:h-16 sm:w-16 mx-auto" />
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                      {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Section
+                    </h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      This section is under development. Content will be added soon.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       {/* Add Bus Modal */}
-      {showAddBusModal && <AddBusModal />}
+      <AnimatePresence>
+        {showAddBusModal && <AddBusModal />}
+      </AnimatePresence>
     </div>
   );
 };

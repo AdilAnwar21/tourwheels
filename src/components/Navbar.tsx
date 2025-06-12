@@ -6,7 +6,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   // TODO: Replace with actual auth state
-  const isLoggedIn = false;
+  const isLoggedIn = true;
   const userType = 'user'; // or 'merchant'
 
   const handleLogout = () => {

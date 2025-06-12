@@ -1,6 +1,10 @@
 // import React from 'react';
 import { motion } from 'framer-motion';
-import { Bus, Users, CreditCard, Calendar, Shield, MapPin, Star, Clock, Phone, Mail, MessageSquare } from 'lucide-react';
+import { Bus, 
+  // Users, 
+  CreditCard, 
+  // Calendar, 
+  Shield, MapPin, Star, Clock, Phone, Mail, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { appService } from '../services/api';
 

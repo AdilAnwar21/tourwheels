@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, 
+  // useLocation 
+} from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bus, 
@@ -24,7 +26,7 @@ interface MerchantSidebarProps {
 
 const MerchantSidebar: React.FC<MerchantSidebarProps> = ({ activeTab, setActiveTab }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  // const location = useLocation();
 
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: <Home className="h-5 w-5" /> },
