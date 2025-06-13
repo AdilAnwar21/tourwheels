@@ -7,7 +7,7 @@ import MerchantLogin from './pages/MerchantLogin';
 import UserLogin from './pages/UserLogin';
 import MerchantDashboard from './pages/MerchantDashboard';
 import UserDashboard from './pages/UserDashboard';
-import BusDetails from './components/BusDetails';
+import BusDetails from './pages/BusDetails';
 import Footer from './components/Footer';
 
 function App() {
