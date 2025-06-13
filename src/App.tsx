@@ -7,6 +7,7 @@ import MerchantLogin from './pages/MerchantLogin';
 import UserLogin from './pages/UserLogin';
 import MerchantDashboard from './pages/MerchantDashboard';
 import UserDashboard from './pages/UserDashboard';
+import BusDetails from './pages/BusDetails';
 import Footer from './components/Footer';
 
 function App() {
@@ -22,6 +23,9 @@ function App() {
               <Footer />
             </>
           } />
+          
+          {/* Bus details page */}
+          <Route path="/bus/:id" element={<BusDetails />} />
           
           {/* Auth pages with navbar */}
           <Route path="/register" element={

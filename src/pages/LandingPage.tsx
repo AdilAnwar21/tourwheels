@@ -57,17 +57,20 @@ const LandingPage = () => {
     {
       image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&fit=crop',
       title: 'Luxury Fleet',
-      description: 'Experience comfort with our premium vehicles'
+      description: 'Experience comfort with our premium vehicles',
+      id: 1
     },
     {
       image: 'https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?w=800&fit=crop',
       title: 'Scenic Routes',
-      description: 'Discover beautiful destinations'
+      description: 'Discover beautiful destinations',
+      id: 2
     },
     {
       image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&fit=crop',
       title: 'Group Travel',
-      description: 'Perfect for large groups and events'
+      description: 'Perfect for large groups and events',
+      id: 3
     }
   ];
 
@@ -194,7 +197,8 @@ const LandingPage = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group"
+                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group cursor-pointer"
+                onClick={() => window.location.href = `/bus/${feature.id}`}
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -206,6 +210,11 @@ const LandingPage = () => {
                 <div className="p-6">
                   <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                   <p className="text-gray-600">{feature.description}</p>
+                  <div className="mt-4">
+                    <span className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
+                      View Details →
+                    </span>
+                  </div>
                 </div>
               </motion.div>
             ))}
