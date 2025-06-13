@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import 
+// React, 
+{ useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -6,8 +8,8 @@ import {
   Star, 
   Users, 
   MapPin, 
-  Calendar, 
-  Clock, 
+  // Calendar, 
+  // Clock, 
   Shield, 
   Wifi, 
   Snowflake, 
@@ -562,7 +564,7 @@ const BusDetails = () => {
                 
                 {/* Image Navigation */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                  {bus.images.map((_, index) => (
+                  {bus.images.map((_:any, index:any) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
@@ -576,7 +578,7 @@ const BusDetails = () => {
 
               {/* Image Thumbnails */}
               <div className="grid grid-cols-5 gap-2">
-                {bus.images.map((image, index) => (
+                {bus.images.map((image:any, index:any) => (
                   <motion.img
                     key={index}
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -676,7 +678,7 @@ const BusDetails = () => {
                       >
                         <h3 className="text-xl font-semibold mb-4">Vehicle Features</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {bus.features.map((feature, index) => (
+                          {bus.features.map((feature:any, index:any) => (
                             <motion.div
                               key={index}
                               initial={{ opacity: 0, x: -20 }}
@@ -707,7 +709,7 @@ const BusDetails = () => {
                           {Object.entries(bus.specifications).map(([key, value]) => (
                             <div key={key} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                               <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-                              <span className="text-gray-600">{value}</span>
+                              <span className="text-gray-600">{String(value)}</span>
                             </div>
                           ))}
                         </div>
@@ -732,7 +734,7 @@ const BusDetails = () => {
                         </div>
 
                         <div className="space-y-4">
-                          {bus.reviews.map((review) => (
+                          {bus.reviews.map((review:any) => (
                             <div key={review.id} className="p-4 bg-gray-50 rounded-lg">
                               <div className="flex items-start space-x-3">
                                 <img
@@ -779,7 +781,7 @@ const BusDetails = () => {
                           {Object.entries(bus.policies).map(([key, value]) => (
                             <div key={key} className="p-4 bg-gray-50 rounded-lg">
                               <h4 className="font-semibold capitalize mb-2">{key.replace(/([A-Z])/g, ' $1')}</h4>
-                              <p className="text-gray-600">{value}</p>
+                              <p className="text-gray-600">{String(value)}</p>
                             </div>
                           ))}
                         </div>
